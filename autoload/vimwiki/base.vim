@@ -123,8 +123,7 @@ function! s:is_wiki_link(link_infos) abort
 endfunction
 
 function! s:get_hashed_filename(link_text) abort
-   let hash = sha256(a:link_text)
-   return hash . vimwiki#vars#get_wikilocal('ext')
+   return sha256(a:link_text)
  endfunction
 
 function! vimwiki#base#resolve_link(link_text, ...) abort
