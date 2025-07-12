@@ -124,7 +124,8 @@ endfunction
 
 function! s:get_hashed_filename(link_text) abort
   let raw_path = vimwiki#vars#get_wikilocal('path') . a:link_text
-  if filereadable(raw_path)
+  let raw_path_with_ext = raw_path . vimwiki#vars#get_wikilocal('ext')
+  if filereadable(raw_path) || filereadable(raw_path_with_ext)
      return a:link_text
   endif
   return sha256(a:link_text)
