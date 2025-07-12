@@ -122,6 +122,10 @@ function! s:is_wiki_link(link_infos) abort
   return a:link_infos.scheme =~# '\mwiki\d\+' || a:link_infos.scheme ==# 'diary'
 endfunction
 
+function! s:get_hashed_filename(link_text) abort
+   let hash = sha256(a:link_text)
+   return hash . vimwiki#vars#get_wikilocal('ext')
+ endfunction
 
 function! vimwiki#base#resolve_link(link_text, ...) abort
   " Extract infos about the target from a link.
@@ -246,6 +250,8 @@ function! vimwiki#base#resolve_link(link_text, ...) abort
       endif
     endif
 
+    let hashed_filename = s:get_hashed_filename(link_text)
+
     if is_absolute_wiki_link
       " Leading // link to the absolute path of a wiki page somewhere on the
       " filesystem.
@@ -254,7 +260,7 @@ function! vimwiki#base#resolve_link(link_text, ...) abort
       let root_dir = vimwiki#vars#get_wikilocal('path', link_infos.index)
     endif
 
-    let link_infos.filename = root_dir . link_text
+    let link_infos.filename = root_dir . hashed_filename
 
     if vimwiki#path#is_link_to_dir(link_text)
       if vimwiki#vars#get_global('dir_link') !=? ''
