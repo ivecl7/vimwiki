@@ -129,7 +129,7 @@ function! s:get_hashed_filename(link_text) abort
   let buffer_names = map(getbufinfo(), 'fnamemodify(v:val.name, ":t:r")')
   echom buffer_names
 
-  if filereadable(raw_path) || filereadable(raw_path_with_ext) || index(buffer_names, link_text) >= 0
+  if filereadable(raw_path) || filereadable(raw_path_with_ext) || index(buffer_names, a:link_text) >= 0
      return a:link_text
   endif
   return sha256(a:link_text)
