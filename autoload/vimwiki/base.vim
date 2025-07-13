@@ -145,6 +145,7 @@ function! vimwiki#base#resolve_link(link_text, ...) abort
     let source_wiki = vimwiki#vars#get_bufferlocal('wiki_nr')
     let source_file = vimwiki#path#current_wiki_file()
   endif
+  let parent_filename = vimwiki#vars#set_global('parent_filename', fnamemodify(source_file, ':t:r'))
 
   " Get rid of '\' in escaped characters in []() style markdown links
   " other style links don't allow '\'

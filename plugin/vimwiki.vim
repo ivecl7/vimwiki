@@ -279,11 +279,7 @@ function! s:create_h1(fname) abort
   let header = ["---", "Title: ", hash, "Created: " . strftime ("%Y.%m.%d %H:%M:%S"), "Tags:", "---"]
   let refer = 'Refer:'
   let lnk = vimwiki#vars#get_global("lnk")
-  let prev_links = vimwiki#vars#get_bufferlocal("prev_links")
-  let prev_link = prev_links[0]
-  echo prev_link
-  "let refer_link = fnamemodify(prev_link, ':t:r')
-
+  let parent_filename = vimwiki#vars#get_global("parent_filename")
 
   " Clause: don't insert header for index page
   if hash ==# vimwiki#vars#get_wikilocal('index', idx)
@@ -305,7 +301,7 @@ function! s:create_h1(fname) abort
     endfor
   else
     keepjumps call append(0, header)
-    call append(line('$'), [lnk, '', refer])
+    call append(line('$'), [lnk, '', refer, parent_filename])
   endif
 endfunction
 
