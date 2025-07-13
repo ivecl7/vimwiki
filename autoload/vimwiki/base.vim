@@ -1688,7 +1688,7 @@ function! vimwiki#base#follow_link(split, ...) abort
   let lnk = matchstr(vimwiki#base#matchstr_at_cursor(vimwiki#vars#get_syntaxlocal('rxWikiLink')),
         \ vimwiki#vars#get_syntaxlocal('rxWikiLinkMatchUrl'))
 
-  call vimwiki#vars#set_bufferlocal('lnk', lnk)
+  call vimwiki#vars#set_global('lnk', lnk)
 
   " Try WikiIncl
   if lnk ==? ''
