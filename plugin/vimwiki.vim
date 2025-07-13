@@ -278,8 +278,7 @@ function! s:create_h1(fname) abort
   let hash = 'Hash: ' . expand('%:t:r')
   let header = ["---", "Title: ", hash, "Created: " . strftime ("%Y.%m.%d %H:%M:%S"), "Tags:", "---"]
   let refer = 'Refer:'
-  let lnk = matchstr(vimwiki#base#matchstr_at_cursor(vimwiki#vars#get_syntaxlocal('rxWikiLink')),
-        \ vimwiki#vars#get_syntaxlocal('rxWikiLinkMatchUrl'))
+  let lnk = vimwiki#vars#get_bufferlocal("lnk")
 
 
   " Clause: don't insert header for index page
