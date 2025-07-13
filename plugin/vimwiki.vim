@@ -301,8 +301,7 @@ function! s:create_h1(fname) abort
     endfor
   else
     keepjumps call append(0, header)
-    call append(9, lnk)
-    echom "append lnk: " . lnk
+    call append(line('$'), lnk)
     call append(line('$'), refer)
   endif
 endfunction
