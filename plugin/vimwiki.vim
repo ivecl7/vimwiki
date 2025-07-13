@@ -281,9 +281,9 @@ function! s:create_h1(fname) abort
   let lnk = vimwiki#vars#get_global("lnk")
   let prev_links = vimwiki#vars#get_bufferlocal("prev_links")
   echom "prev_links: " . prev_links
-  let prev_link = prev_links[0][0]
-  echom "prev_link: " . prev_link
-  let refer_link = fnamemodify(prev_link, ':t:r')
+  "let prev_link = prev_links[0][0]
+  "echom "prev_link: " . prev_link
+  "let refer_link = fnamemodify(prev_link, ':t:r')
 
 
   " Clause: don't insert header for index page
@@ -306,7 +306,7 @@ function! s:create_h1(fname) abort
     endfor
   else
     keepjumps call append(0, header)
-    call append(line('$'), [lnk, '', refer, refer_link])
+    call append(line('$'), [lnk, '', refer])
   endif
 endfunction
 
