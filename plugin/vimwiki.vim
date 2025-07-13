@@ -278,6 +278,8 @@ function! s:create_h1(fname) abort
   let hash = 'Hash: ' . expand('%:t:r')
   let header = ["---", "Title: ", hash, "Created: " . strftime ("%Y.%m.%d %H:%M:%S"), "Tags:", "---"]
   let refer = 'Refer:'
+  let lnk = matchstr(vimwiki#base#matchstr_at_cursor(vimwiki#vars#get_syntaxlocal('rxWikiLink')),
+        \ vimwiki#vars#get_syntaxlocal('rxWikiLinkMatchUrl'))
 
 
   " Clause: don't insert header for index page
@@ -300,7 +302,9 @@ function! s:create_h1(fname) abort
     endfor
   else
     keepjumps call append(0, header)
-    call append(10, refer)
+    call append(9, lnk)
+    echom "append lnk: " . lnk
+    call append(line('$'), refer)
   endif
 endfunction
 
