@@ -126,7 +126,7 @@ function! s:get_hashed_filename(link_text) abort
   let raw_path = vimwiki#vars#get_wikilocal('path') . a:link_text
   let raw_path_with_ext = raw_path . vimwiki#vars#get_wikilocal('ext')
   let source_file = fnamemodify(vimwiki#path#current_wiki_file(), ':t:r')
-  if filereadable(raw_path) || filereadable(raw_path_with_ext) || source_file ==# link_text
+  if filereadable(raw_path) || filereadable(raw_path_with_ext) || source_file ==# a:link_text
      return a:link_text
   endif
   return sha256(a:link_text)
