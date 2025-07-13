@@ -280,9 +280,8 @@ function! s:create_h1(fname) abort
   let refer = 'Refer:'
   let lnk = vimwiki#vars#get_global("lnk")
   let prev_links = vimwiki#vars#get_bufferlocal("prev_links")
-  echom "prev_links: " . prev_links
-  "let prev_link = prev_links[0][0]
-  "echom "prev_link: " . prev_link
+  let prev_link = prev_links[0][0]
+  echom "prev_link: " . prev_link
   "let refer_link = fnamemodify(prev_link, ':t:r')
 
 
