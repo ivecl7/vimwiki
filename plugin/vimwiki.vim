@@ -276,7 +276,7 @@ function! s:create_h1(fname) abort
 
   " Get tail of filename without extension
   let hash = 'Hash: ' . expand('%:t:r')
-  let header = ["---", "Title: ", hash, "Created: " . strftime ("%Y.%m.%d %H:%M:%S"), "Tags:", "---"]
+  let header = ["---", "Title: ", hash, "Created: " . strftime ("%Y%m%d %H:%M:%S"), "Tags:", "---"]
   let refer = 'Refer:'
   let lnk = vimwiki#vars#get_global("lnk")
   let parent_filename = vimwiki#vars#get_global("parent_filename")
