@@ -95,6 +95,15 @@ function! s:find_autoload_file(name) abort
   return ''
 endfunction
 
+function! s:find_autoload_dir(name) abort
+  for path in split(&runtimepath, ',')
+    let dir = path.'/autoload/vimwiki/'.a:name
+    if isdirectory(dir)
+      return dir
+    endif
+  endfor
+  return ''
+endfunction
 
 function! s:default_CSS_full_name(path) abort
   let path = expand(a:path)
@@ -117,6 +126,20 @@ function! s:create_default_CSS(path) abort
   return 0
 endfunction
 
+function! s:default_mathjax_js_full_path(path) abort
+  let path = expand(a:path)
+  let mathjax_js_full_path = path . vimwiki#vars#get_wikilocal('mathjax_js_path')
+  return mathjax_js_full_path
+endfunction
+
+function! s:create_mathjax_js(path) abort
+  let mathjax_js_full_path = s:default_mathjax_js_full_path(a:path)
+  if !isdirectory(mathjax_js_full_path)
+    let default_mathjax_js = s:find_autoload_dir('es5')
+    execute "!cp -r" . default_mathjax_js . " " . mathjax_js_full_path
+  endif
+  return 0
+endfunction
 
 function! s:template_full_name(name) abort
   let name = a:name
@@ -1922,6 +1945,7 @@ function! vimwiki#html#Wiki2HTML(path_html, wikifile) abort
   let result = s:convert_file(a:path_html, vimwiki#path#wikify_path(a:wikifile))
   if result !=? ''
     call s:create_default_CSS(a:path_html)
+    call s:create_mathjax_js(a:path_html)
   endif
   return result
 endfunction
@@ -1984,6 +2008,10 @@ function! vimwiki#html#WikiAll2HTML(path_html, force) abort
   let created = s:create_default_CSS(path_html)
   if created
     call vimwiki#u#echo('Default style.css has been created')
+  endif
+  let created = s:create_mathjax_js(path_html)
+  if created
+    call vimwiki#u#echo('Default mathjax_js has been created')
   endif
   call vimwiki#u#echo('HTML exported to '.path_html)
   call vimwiki#u#echo('Done!')

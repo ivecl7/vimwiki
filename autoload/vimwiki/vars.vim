@@ -496,6 +496,7 @@ function! s:get_default_wikilocal() abort
         \ 'color_tag_template': {'type': type({}), 'default': color_tag_rx},
         \ 'commentstring': {'type': type(''), 'default': '%%%s'},
         \ 'css_name': {'type': type(''), 'default': 'style.css', 'min_length': 1},
+        \ 'mathjax_js_path': {'type': type(''), 'default': 'es5', 'min_length': 1},
         \ 'custom_wiki2html': {'type': type(''), 'default': ''},
         \ 'custom_wiki2html_args': {'type': type(''), 'default': ''},
         \ 'cycle_bullets': {'type': type(0), 'default': 0},
