@@ -275,28 +275,33 @@ function! s:create_h1(fname) abort
   endif
 
   " Get tail of filename without extension
-  let title = expand('%:t:r')
+  let hash = 'Hash: ' . expand('%:t:r')
+  let header = ["---", "Title: ", hash, "Created: " . strftime ("%Y%m%d %H:%M:%S"), "Tags:", "---"]
+  let refer = 'Refer:'
+  let lnk = vimwiki#vars#get_global("lnk")
+  let parent_filename = vimwiki#vars#get_global("parent_filename")
 
   " Clause: don't insert header for index page
-  if title ==# vimwiki#vars#get_wikilocal('index', idx)
+  if hash ==# vimwiki#vars#get_wikilocal('index', idx)
     return
   endif
 
   " Don't substitute space char for diary pages
-  if title !~# '^\d\{4}-\d\d-\d\d'
+  if hash !~# '^\d\{4}-\d\d-\d\d'
     " NOTE: it is possible this could remove desired characters if the 'links_space_char'
-    " character matches characters that are intentionally used in the title.
-    let title = substitute(title, vimwiki#vars#get_wikilocal('links_space_char'), ' ', 'g')
+    " character matches characters that are intentionally used in the hash.
+    let hash = substitute(hash, vimwiki#vars#get_wikilocal('links_space_char'), ' ', 'g')
   endif
 
   " Insert the header
   if vimwiki#vars#get_wikilocal('syntax') ==? 'markdown'
-    keepjumps call append(0, '# ' . title)
+    keepjumps call append(0, '# ' . hash)
     for _ in range(vimwiki#vars#get_global('markdown_header_style'))
       keepjumps call append(1, '')
     endfor
   else
-    keepjumps call append(0, '= ' . title . ' =')
+    keepjumps call append(0, header)
+    call append(line('$'), [lnk, '', refer, parent_filename])
   endif
 endfunction
 

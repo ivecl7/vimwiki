@@ -122,6 +122,17 @@ function! s:is_wiki_link(link_infos) abort
   return a:link_infos.scheme =~# '\mwiki\d\+' || a:link_infos.scheme ==# 'diary'
 endfunction
 
+function! s:get_hashed_filename(link_text) abort
+  let raw_path = vimwiki#vars#get_wikilocal('path') . a:link_text
+  let raw_path_with_ext = raw_path . vimwiki#vars#get_wikilocal('ext')
+  let buffer_names = map(getbufinfo(), 'fnamemodify(v:val.name, ":t:r")')
+  let buffer_names_with_ext = map(getbufinfo(), 'fnamemodify(v:val.name, ":t")')
+
+  if filereadable(raw_path) || filereadable(raw_path_with_ext) || index(buffer_names, a:link_text) >= 0 || index(buffer_names_with_ext, a:link_text) >= 0
+     return a:link_text
+  endif
+  return sha256(a:link_text)
+ endfunction
 
 function! vimwiki#base#resolve_link(link_text, ...) abort
   " Extract infos about the target from a link.
@@ -136,6 +147,7 @@ function! vimwiki#base#resolve_link(link_text, ...) abort
     let source_wiki = vimwiki#vars#get_bufferlocal('wiki_nr')
     let source_file = vimwiki#path#current_wiki_file()
   endif
+  let parent_filename = vimwiki#vars#set_global('parent_filename', fnamemodify(source_file, ':t:r'))
 
   " Get rid of '\' in escaped characters in []() style markdown links
   " other style links don't allow '\'
@@ -246,6 +258,8 @@ function! vimwiki#base#resolve_link(link_text, ...) abort
       endif
     endif
 
+    let hashed_filename = s:get_hashed_filename(link_text)
+
     if is_absolute_wiki_link
       " Leading // link to the absolute path of a wiki page somewhere on the
       " filesystem.
@@ -254,7 +268,7 @@ function! vimwiki#base#resolve_link(link_text, ...) abort
       let root_dir = vimwiki#vars#get_wikilocal('path', link_infos.index)
     endif
 
-    let link_infos.filename = root_dir . link_text
+    let link_infos.filename = root_dir . hashed_filename
 
     if vimwiki#path#is_link_to_dir(link_text)
       if vimwiki#vars#get_global('dir_link') !=? ''
@@ -1676,6 +1690,9 @@ function! vimwiki#base#follow_link(split, ...) abort
   " Try WikiLink
   let lnk = matchstr(vimwiki#base#matchstr_at_cursor(vimwiki#vars#get_syntaxlocal('rxWikiLink')),
         \ vimwiki#vars#get_syntaxlocal('rxWikiLinkMatchUrl'))
+
+  call vimwiki#vars#set_global('lnk', lnk)
+
   " Try WikiIncl
   if lnk ==? ''
     let lnk = matchstr(vimwiki#base#matchstr_at_cursor(vimwiki#vars#get_global('rxWikiIncl')),
